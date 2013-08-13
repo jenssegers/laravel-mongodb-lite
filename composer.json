@@ -1,6 +1,6 @@
 {
     "name": "jenssegers/mongodb-lite",
-    "description": "",
+    "description": "A lightweight MongoDB database library and model for Laravel 4",
     "keywords": ["laravel","eloquent","mongodb","mongo","database","model"],
     "authors": [
         {
