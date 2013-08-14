@@ -5,11 +5,11 @@ The lite version of https://github.com/jenssegers/Laravel-MongoDB
 
 The difference between the full version and this lite version is as following:
 
-- [x] Database manager with configurable connections
-- [x] Basic model class with accessors and mutators
-- [x] Use original MongoCollection methods
-- [ ] Advanced Eloquent operations like relations
-- [ ] Query builder support
+ - [x] Database manager with configurable connections
+ - [x] Basic model class with accessors and mutators
+ - [x] Use original MongoCollection operations
+ - [ ] Advanced Eloquent operations like relations
+ - [ ] Query builder support
 
 This lite version returns the native PHP MongoDB collection object instead of hiding them behind the query builder. This can be useful for people who want to do advanced MongoDB stuff using the original methods.
 
@@ -32,7 +32,7 @@ Add the service provider in `app/config/app.php`:
 
     'Jenssegers\Mongodb\MongodbServiceProvider',
 
-Add an alias for the query builder, you can change this alias to your own preference:
+Add an alias for the database manager, you can change this alias to your own preference:
 
     'MDB'            => 'Jenssegers\MongodbLite\Facades\DB',
 
@@ -59,6 +59,7 @@ Once your configuration is in place you can access your collections like this:
 This returns the MongoCollection object associated with the 'mongodb' connection item. If you want to use a different connection use:
 
 	MDB::connection('mongodb2')->collection('users');
+	// A MongoCollection object
 
 Because this returns the native MongoCollection object you can use all of the standard methods:
 
