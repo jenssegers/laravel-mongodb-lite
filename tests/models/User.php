@@ -11,4 +11,9 @@ class User extends Eloquent {
 		return md5($this->attributes['name']);
 	}
 
+	public function setPasswordAttribute($value)
+	{
+		$this->attributes['password'] = crypt($value);
+	}
+
 }

@@ -53,6 +53,7 @@ class ModelTest extends PHPUnit_Framework_TestCase {
 		$this->assertInstanceOf('User', $user);
 		$this->assertEquals('John Doe', $user->name);
 		$this->assertInstanceOf('MongoID', $user->_id);
+		$this->assertTrue($user->exists);
 	}
 
 	public function testAccessor()
@@ -61,6 +62,18 @@ class ModelTest extends PHPUnit_Framework_TestCase {
 		$user = User::findOne(array('name' => 'John Doe'));
 
 		$this->assertEquals(md5('John Doe'), $user->test);
+	}
+
+	public function testMutator()
+	{
+		$user = new User;
+		$user->name = 'John Doe';
+		$user->password = 'test';
+		$this->assertNotEquals($user->password, 'test');
+		$user->save();
+
+		$test = User::findOne(array('name' => 'John Doe'));
+		$this->assertNotEquals($test->password, 'test');
 	}
 
 	public function testSave()
@@ -88,6 +101,24 @@ class ModelTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('Jane Doe', $user->name);
 		$this->assertEquals($id, $user->_id);
 		$this->assertNotEquals($test, $user);
+	}
+
+	public function testCreate()
+	{
+		$user = User::create(array('name' => 'John Doe'));
+		$this->assertEquals(1, User::count());
+		$this->assertTrue($user->exists);
+	}
+
+	public function testDelete()
+	{
+		$user = new User;
+		$user->name = 'John Doe';
+		$user->save();
+
+		$user->delete();
+		$this->assertFalse($user->exists);
+		$this->assertEquals(0, User::count());
 	}
 
 }

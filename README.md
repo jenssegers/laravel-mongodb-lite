@@ -68,7 +68,7 @@ Because this returns the native MongoCollection object you can use all of the st
 Model
 -----
 
-The model is a more flexible way to access the collection object. You can use all standard MongoCollection operations here as well.
+A model offers a more flexible way to access a collection.
 
 	use Jenssegers\MongodbLite\Model as Eloquent;
 
@@ -78,7 +78,13 @@ The model is a more flexible way to access the collection object. You can use al
 
 	}
 
-Results returned when using a model class will be wrapped in a laravel-collection of model objects.
+You can use all standard MongoCollection operations here as well:
+
+	$users = User::find();
+
+### Collections
+
+All multi-result sets returned by the model return an Laravel Collection object. This object implements the IteratorAggregate PHP interface so it can be iterated over like an array. However, this object also has a variety of other helpful methods for working with result sets. More information about this at http://laravel.com/docs/eloquent#collections
 
 	$users = User::all();
 	// Will return a collection of User objects
@@ -87,7 +93,9 @@ Results returned when using a model class will be wrapped in a laravel-collectio
 	$user = $users->first();
 	$count = $users->count();
 
-Because model objects are returned, you can still define custom methods and use things like accessors and mutators.
+### Accessors & Mutators
+
+Because model objects are returned, you can still define custom methods and use accessors and mutators. More information about this at http://laravel.com/docs/eloquent#accessors-and-mutators
 
 	use Jenssegers\MongodbLite\Model as Eloquent;
 
@@ -95,10 +103,17 @@ Because model objects are returned, you can still define custom methods and use 
 
 		protected $collection = 'users';
 
+		// Accessor
 		public function getAvatarAttribute()
 		{
 			$hash = md5($this->attributes['email']);
 			return "http://www.gravatar.com/avatar/$hash";
+		}
+
+		// Mutator
+		public function setPasswordAttribute($value)
+		{
+			$this->attributes['password'] = crypt($value);
 		}
 	}
 
@@ -107,13 +122,30 @@ Which can then be used like this:
 	$user = User::findOne(array('_id' => new MongoId('47cc67093475061e3d9536d2')));
 	echo $user->avatar;
 
-The model also has a `save()` method, which will perform an insert or update depending if it is a new or existing item:
+### Insert, Update, Delete
 
-	// Insert
+To create a new record in the database from a model, simply create a new model instance and call the save method.
+
 	$user = new User;
 	$user->name = 'John Doe';
 	$user->save();
 
-	// Update
+To update a model, you may retrieve it, change an attribute, and use the save method:
+
 	$user->age = 35;
 	$user->save();
+
+You can create a new model using:
+
+	$user = User::create(array('name' => 'John'));
+
+To delete a model, simply call the delete method on the instance:
+
+	$user->delete();
+
+### Converting To Arrays / JSON
+
+You can convert a model or a collection of models to array or json just like in Eloquent: 
+
+	$user->toArray();
+	$user->toJson();

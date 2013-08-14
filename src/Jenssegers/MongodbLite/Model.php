@@ -34,28 +34,46 @@ class Model extends Eloquent {
 	 */
 	public function save()
 	{
-		// If the model already exists in the database we can just update our record
-		// that is already in this database using the current IDs in this "where"
-		// clause to only update this model. Otherwise, we'll just insert them.
-		if ($this->exists)
-		{
-			$collection = $this->getMongoCollection();
-			$saved = $collection->update(array('_id', $this->attributes['_id']), $this->attributes);
-		}
+		$collection = $this->getMongoCollection();
+		$saved = $collection->save($this->attributes);
 
-		// If the model is brand new, we'll insert it into our database and set the
-		// ID attribute on the model to the value of the newly inserted row's ID
-		// which is typically an auto-increment value managed by the database.
-		else
-		{
-			$collection = $this->getMongoCollection();
-			$saved = $collection->insert($this->attributes);
-
-			// We will go ahead and set the exists property to true
-			$this->exists = true;
-		}
+		$this->exists = true;
 
 		return $saved;
+	}
+
+	/**
+	 * Save a new model and return the instance.
+	 *
+	 * @param  array  $attributes
+	 * @return Model|static
+	 */
+	public static function create(array $attributes)
+	{
+		$model = new static($attributes);
+
+		$model->save();
+
+		return $model;
+	}
+
+	/**
+	 * Delete the model from the database.
+	 *
+	 * @return bool|null
+	 */
+	public function delete()
+	{
+		if ($this->exists)
+		{
+			// Remove just one item
+			$collection = $this->getMongoCollection();
+			$collection->remove(array('_id' => $this->attributes['_id']), array('justOne' => true));
+
+			$this->exists = false;
+
+			return true;
+		}
 	}
 
 	/**
@@ -114,25 +132,6 @@ class Model extends Eloquent {
 	}
 
 	/**
-	 * Create a new instance of the given model.
-	 *
-	 * @param  array  $attributes
-	 * @param  bool   $exists
-	 * @return Model|static
-	 */
-	public function newInstance($attributes = array(), $exists = false)
-	{
-		// This method just provides a convenient way for us to generate fresh model
-		// instances of this current model. It is particularly useful during the
-		// hydration of new objects via the Eloquent query builder instances.
-		$model = new static((array) $attributes);
-
-		$model->exists = $exists;
-
-		return $model;
-	}
-
-	/**
 	 * Handle dynamic static method calls into the method.
 	 *
 	 * @param  string  $method
@@ -143,6 +142,7 @@ class Model extends Eloquent {
 	{
 		$instance = new static;
 
+		// Pass static methods to the MongoCollection object
 		$result = call_user_func_array(array($instance->getMongoCollection(), $method), $parameters);
 
 		// If a MongoCursor is returned we will convert it to a collection of models
