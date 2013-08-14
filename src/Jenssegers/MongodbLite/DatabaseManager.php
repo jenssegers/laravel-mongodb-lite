@@ -1,7 +1,5 @@
 <?php namespace Jenssegers\MongodbLite;
 
-use Illuminate\Database\ConnectionResolverInterface;
-
 class DatabaseManager implements ConnectionResolverInterface {
 
 	/**

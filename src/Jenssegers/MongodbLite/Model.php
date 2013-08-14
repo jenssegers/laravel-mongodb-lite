@@ -2,8 +2,7 @@
 
 use MongoCursor;
 use Jenssegers\Model\Model as Eloquent;
-use Illuminate\Database\ConnectionResolverInterface;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 
 class Model extends Eloquent {
 
@@ -24,7 +23,7 @@ class Model extends Eloquent {
 	/**
 	 * The collection resolver instance.
 	 *
-	 * @var \Illuminate\Database\ConnectionResolverInterface
+	 * @var ConnectionResolverInterface
 	 */
 	protected static $resolver;
 
@@ -100,7 +99,7 @@ class Model extends Eloquent {
 	 * Create a new Eloquent Collection from a MongoCursor.
 	 *
 	 * @param  MongoCursor  $cursor
-	 * @return Illuminate\Database\Eloquent\Collection
+	 * @return Illuminate\Support\Collection
 	 */
 	protected function newCollection(MongoCursor $cursor)
 	{
@@ -119,7 +118,7 @@ class Model extends Eloquent {
 	 *
 	 * @param  array  $attributes
 	 * @param  bool   $exists
-	 * @return \Illuminate\Database\Eloquent\Model|static
+	 * @return Model|static
 	 */
 	public function newInstance($attributes = array(), $exists = false)
 	{

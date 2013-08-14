@@ -38,7 +38,7 @@ class ModelTest extends PHPUnit_Framework_TestCase {
 		User::insert(array('name' => 'Jane Doe'));
 
 		$users = User::find();
-		$this->assertInstanceOf('Illuminate\Database\Eloquent\Collection', $users);
+		$this->assertInstanceOf('Illuminate\Support\Collection', $users);
 
 		$user = $users->first();
 		$this->assertInstanceOf('User', $user);
