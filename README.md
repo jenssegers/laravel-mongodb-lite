@@ -108,3 +108,14 @@ Which can then be used like this:
 
 	$user = User::findOne(array('_id' => new MongoId('47cc67093475061e3d9536d2')));
 	echo $user->avatar;
+
+The model also has a `save()` method, which will perform an insert or update depending if it is a new or existing item:
+
+	// Insert
+	$user = new User;
+	$user->name = 'John Doe';
+	$user->save();
+
+	// Update
+	$user->age = 35;
+	$user->save();
