@@ -1,6 +1,6 @@
 <?php
 
-use Jenssegers\MongodbLite\Model as Eloquent;
+use Jenssegers\Mongodb\Lite\Model as Eloquent;
 
 class User extends Eloquent {
 

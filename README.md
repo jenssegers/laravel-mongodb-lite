@@ -28,18 +28,19 @@ Add the package to your `composer.json` and run `composer update`.
 
 Add the service provider in `app/config/app.php`:
 
-    'Jenssegers\Mongodb\MongodbServiceProvider',
-
-Add an alias for the database manager, you can change this alias to your own preference:
-
-    'MDB'            => 'Jenssegers\MongodbLite\Facades\DB',
+    'Jenssegers\Mongodb\Lite\MongodbServiceProvider',
 
 Configuration
 -------------
 
-This package will automatically check the database configuration in `app/config/database.php` for a 'mongodb' item.
+Change your default database connection name in `app/config/database.php`:
+
+    'default' => 'mongodb',
+
+And add a new mongodb connection:
 
     'mongodb' => array(
+        'driver'   => 'mongodb',
         'host'     => 'localhost',
         'port'     => 27017,
         'username' => 'username',
@@ -52,18 +53,18 @@ Getting a Collection
 
 Once your configuration is in place you can access your collections like this:
 
-	MDB::collection('users');
+	DB::collection('users');
 
 This returns the MongoCollection object associated with the 'mongodb' connection item. If you want to use a different connection use:
 
-	MDB::connection('mongodb2')->collection('users');
+	DB::connection('mongodb2')->collection('users');
 	// A MongoCollection object
 
 Because this returns the native MongoCollection object you can use all of the standard methods:
 
-	$users = MDB::collection('users')->find();
-	$count = MDB::collection('users')->count();
-	$user = MDB::collection('users')->findOne(array('name' => 'John Doe'));
+	$users = DB::collection('users')->find();
+	$count = DB::collection('users')->count();
+	$user = DB::collection('users')->findOne(array('name' => 'John Doe'));
 
 Model
 -----

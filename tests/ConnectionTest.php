@@ -1,52 +1,48 @@
 <?php
 require_once('tests/app.php');
 
-use Jenssegers\MongodbLite\DatabaseManager;
+use Illuminate\Support\Facades\DB;
 
 class ConnectionTest extends PHPUnit_Framework_TestCase {
 
-	private $manager;
-	private $connection;
-
 	public function setUp()
 	{
-		global $app;
-		$this->manager = new DatabaseManager($app);
-		$this->connection = $this->manager->connection();
+		$this->connection = DB::connection();
 	}
 
 	public function tearDown() {}
 
 	public function testConstruct()
 	{
-		$this->assertInstanceOf('Jenssegers\MongodbLite\Connection', $this->connection);
+		$this->assertInstanceOf('Jenssegers\Mongodb\Lite\Connection', DB::connection());
 	}
 
 	public function testCollection()
 	{
-		$collection = $this->connection->collection('test');
-		$this->assertInstanceOf('MongoCollection', $collection);
+		$this->assertInstanceOf('MongoCollection', DB::collection('test'));
 	}
 
 	public function testDb()
 	{
-		$this->assertInstanceOf('MongoDB', $this->connection->getMongoDB());
+		$connection = DB::connection();
+		$this->assertInstanceOf('MongoDB', $connection->getMongoDB());
 	}
 
 	public function testClient()
 	{
-		$this->assertInstanceOf('MongoClient', $this->connection->getMongoClient());
+		$connection = DB::connection();
+		$this->assertInstanceOf('MongoClient', $connection->getMongoClient());
 	}
 
 	public function testGet()
 	{
-		$collection = $this->connection->test;
+		$collection = DB::connection()->test;
 		$this->assertInstanceOf('MongoCollection', $collection);
 	}
 
 	public function testDynamic()
 	{
-		$collections = $this->connection->getCollectionNames();
+		$collections = DB::connection()->getCollectionNames();
 		$this->assertTrue(is_array($collections));
 	}
 

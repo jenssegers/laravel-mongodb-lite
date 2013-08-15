@@ -1,8 +1,8 @@
-<?php namespace Jenssegers\MongodbLite;
+<?php namespace Jenssegers\Mongodb\Lite;
 
 use MongoClient;
 
-class Connection {
+class Connection extends \Illuminate\Database\Connection {
 
     /**
      * The MongoClient object.

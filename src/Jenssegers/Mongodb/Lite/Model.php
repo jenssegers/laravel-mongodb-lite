@@ -1,8 +1,9 @@
-<?php namespace Jenssegers\MongodbLite;
+<?php namespace Jenssegers\Mongodb\Lite;
 
 use MongoCursor;
 use Jenssegers\Model\Model as Eloquent;
 use Illuminate\Support\Collection;
+use Illuminate\Database\ConnectionResolverInterface as Resolver;
 
 class Model extends Eloquent {
 
@@ -108,7 +109,7 @@ class Model extends Eloquent {
 	 * @param  ConnectionResolverInterface  $resolver
 	 * @return void
 	 */
-	public static function setConnectionResolver(ConnectionResolverInterface $resolver)
+	public static function setConnectionResolver(Resolver $resolver)
 	{
 		static::$resolver = $resolver;
 	}
