@@ -1,49 +1,52 @@
 <?php
-require_once('tests/app.php');
 
-use Illuminate\Support\Facades\DB;
+class ConnectionTest extends TestCase {
 
-class ConnectionTest extends PHPUnit_Framework_TestCase {
-
-	public function setUp()
+	public function tearDown()
 	{
-		$this->connection = DB::connection();
+		DB::collection('test')->drop();
 	}
 
-	public function tearDown() {}
-
-	public function testConstruct()
+	public function testConstructs()
 	{
 		$this->assertInstanceOf('Jenssegers\Mongodb\Lite\Connection', DB::connection());
 	}
 
-	public function testCollection()
+	public function testGetsCollection()
 	{
 		$this->assertInstanceOf('MongoCollection', DB::collection('test'));
+		$this->assertInstanceOf('MongoCollection', DB::table('test'));
+	}
+
+	public function testReconnects()
+	{
+		$c1 = DB::connection('mongodb');
+		$c2 = DB::connection('mongodb');
+		$this->assertEquals(spl_object_hash($c1), spl_object_hash($c2));
+
+		$c1 = DB::connection('mongodb');
+		$c2 = DB::reconnect('mongodb');
+		$this->assertNotEquals(spl_object_hash($c1), spl_object_hash($c2));
 	}
 
 	public function testDb()
 	{
-		$connection = DB::connection();
-		$this->assertInstanceOf('MongoDB', $connection->getMongoDB());
+		$this->assertInstanceOf('MongoDB', DB::getMongoDB());
 	}
 
 	public function testClient()
 	{
-		$connection = DB::connection();
-		$this->assertInstanceOf('MongoClient', $connection->getMongoClient());
+		$this->assertInstanceOf('MongoClient', DB::getMongoClient());
 	}
 
-	public function testGet()
+	public function testPassGetter()
 	{
-		$collection = DB::connection()->test;
-		$this->assertInstanceOf('MongoCollection', $collection);
+		$this->assertInstanceOf('MongoCollection', Db::connection()->test);
 	}
 
-	public function testDynamic()
+	public function testPassCalls()
 	{
-		$collections = DB::connection()->getCollectionNames();
-		$this->assertTrue(is_array($collections));
+		$this->assertTrue(is_array(DB::getCollectionNames()));
 	}
 
 }

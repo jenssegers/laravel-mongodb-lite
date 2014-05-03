@@ -11,9 +11,13 @@
     "license" : "MIT",
     "require": {
         "php": ">=5.3.0",
-        "illuminate/support": "4.*",
-        "illuminate/database": "4.*",
-        "jenssegers/model": "dev-master"
+        "illuminate/support": "4.1.*",
+        "illuminate/database": "4.1.*",
+        "jenssegers/model": "*"
+    },
+    "require-dev": {
+        "orchestra/testbench": "2.1.*",
+        "mockery/mockery": "*"
     },
     "autoload": {
         "psr-0": {

@@ -19,13 +19,6 @@ class Connection extends \Illuminate\Database\Connection {
     protected $db;
 
     /**
-     * The database connection configuration options.
-     *
-     * @var array
-     */
-    protected $config = array();
-
-    /**
      * Create a new database connection instance.
      *
      * @param  array   $config
@@ -33,24 +26,26 @@ class Connection extends \Illuminate\Database\Connection {
      */
     public function __construct(array $config)
     {
-        // Store configuration
         $this->config = $config;
 
-        // Check for connection options
+        // Build the connection string
+        $dsn = $this->getDsn($config);
+
+        // You can pass options directly to the MogoClient constructor
         $options = array_get($config, 'options', array());
 
-        // Create connection
-        $this->connection = new MongoClient($this->getDsn($config), $options);
+        // Create the connection
+        $this->connection = $this->createConnection($dsn, $config, $options);
 
         // Select database
         $this->db = $this->connection->{$config['database']};
     }
 
-    /**
-     * Return a new Collection
+     /**
+     * Begin a fluent query against a database collection.
      *
      * @param  string  $collection
-     * @return Collection
+     * @return MongoCollection
      */
     public function collection($collection)
     {
@@ -58,9 +53,20 @@ class Connection extends \Illuminate\Database\Connection {
     }
 
     /**
+     * Begin a fluent query against a database collection.
+     *
+     * @param  string  $table
+     * @return MongoCollection
+     */
+    public function table($table)
+    {
+        return $this->collection($table);
+    }
+
+    /**
      * Get the MongoDB database object.
      *
-     * @return  MongoDB
+     * @return MongoDB
      */
     public function getMongoDB()
     {
@@ -75,6 +81,31 @@ class Connection extends \Illuminate\Database\Connection {
     public function getMongoClient()
     {
         return $this->connection;
+    }
+
+    /**
+     * Create a new MongoClient connection.
+     *
+     * @param  string  $dsn
+     * @param  array   $config
+     * @param  array   $options
+     * @return MongoClient
+     */
+    protected function createConnection($dsn, array $config, array $options)
+    {
+        // Add credentials as options, this makes sure the connection will not fail if
+        // the username or password contains strange characters.
+        if (isset($config['username']) && $config['username'])
+        {
+            $options['username'] = $config['username'];
+        }
+
+        if (isset($config['password']) && $config['password'])
+        {
+            $options['password'] = $config['password'];
+        }
+
+        return new MongoClient($dsn, $options);
     }
 
     /**
@@ -102,17 +133,9 @@ class Connection extends \Illuminate\Database\Connection {
             }
         }
 
-        // Credentials
-        if (isset($config['username']) and isset($config['password']))
-        {
-            $credentials = "{$username}:{$password}@";
-        }
-        else
-        {
-            $credentials = '';
-        }
-
-        return "mongodb://{$credentials}" . implode(',', $hosts) . "/{$database}";
+        // The database name needs to be in the connection string, otherwise it will
+        // authenticate to the admin database, which may result in permission errors.
+        return "mongodb://" . implode(',', $hosts) . "/{$database}";
     }
 
     /**

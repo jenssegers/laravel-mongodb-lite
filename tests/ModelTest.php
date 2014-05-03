@@ -1,11 +1,6 @@
 <?php
-require_once('tests/app.php');
 
-use Jenssegers\MongodbLite\Facades\DB;
-
-class ModelTest extends PHPUnit_Framework_TestCase {
-
-	public function setUp() {}
+class ModelTest extends TestCase {
 
 	public function tearDown()
 	{
@@ -24,7 +19,7 @@ class ModelTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(1, User::count());
 	}
 
-	public function testTruncate()
+	public function testDrop()
 	{
 		User::insert(array('name' => 'John Doe'));
 		$this->assertEquals(1, User::count());
