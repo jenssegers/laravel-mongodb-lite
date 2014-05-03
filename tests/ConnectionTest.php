@@ -2,11 +2,6 @@
 
 class ConnectionTest extends TestCase {
 
-	public function tearDown()
-	{
-		DB::collection('test')->drop();
-	}
-
 	public function testConstructs()
 	{
 		$this->assertInstanceOf('Jenssegers\Mongodb\Lite\Connection', DB::connection());
@@ -47,6 +42,29 @@ class ConnectionTest extends TestCase {
 	public function testPassCalls()
 	{
 		$this->assertTrue(is_array(DB::getCollectionNames()));
+	}
+
+	public function testAuth()
+	{
+		Config::set('database.connections.mongodb.username', 'foo');
+		Config::set('database.connections.mongodb.password', 'bar');
+		$host = Config::get('database.connections.mongodb.host');
+		$port = Config::get('database.connections.mongodb.port', 27017);
+		$database = Config::get('database.connections.mongodb.database');
+
+		$this->setExpectedException('MongoConnectionException', "Failed to connect to: $host:$port: Authentication failed on database '$database' with username 'foo': auth fails");
+		$connection = DB::connection('mongodb');
+	}
+
+	public function testCustomPort()
+	{
+		$port = 27000;
+		Config::set('database.connections.mongodb.port', $port);
+		$host = Config::get('database.connections.mongodb.host');
+		$database = Config::get('database.connections.mongodb.database');
+
+		$this->setExpectedException('MongoConnectionException', "Failed to connect to: $host:$port: Connection refused");
+		$connection = DB::connection('mongodb');
 	}
 
 }
