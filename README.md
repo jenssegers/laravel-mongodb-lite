@@ -1,7 +1,7 @@
 Laravel MongoDB Lite 
 ====================
 
-[![Build Status](http://img.shields.io/travis/jenssegers/laravel-mongodb-lite.svg)](https://travis-ci.org/jenssegers/laravel-mongodb-lite)[![Coverage Status](http://img.shields.io/coveralls/jenssegers/laravel-mongodb-lite.svg)](https://coveralls.io/r/jenssegers/laravel-mongodb-lite)
+[![Build Status](http://img.shields.io/travis/jenssegers/laravel-mongodb-lite.svg)](https://travis-ci.org/jenssegers/laravel-mongodb-lite) [![Coverage Status](http://img.shields.io/coveralls/jenssegers/laravel-mongodb-lite.svg)](https://coveralls.io/r/jenssegers/laravel-mongodb-lite)
 
 
 The lite version of https://github.com/jenssegers/laravel-mongodb
