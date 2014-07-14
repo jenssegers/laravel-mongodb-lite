@@ -16,7 +16,7 @@
         "jenssegers/model": "*"
     },
     "require-dev": {
-        "orchestra/testbench": "2.2.x-dev",
+        "orchestra/testbench": "2.2.*",
         "mockery/mockery": "*"
     },
     "autoload": {
