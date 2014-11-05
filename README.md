@@ -21,13 +21,9 @@ It also ships with a basic Eloquent-like model for extra flexibility. More infor
 Installation
 ------------
 
-Add the package to your `composer.json` and run `composer update`.
+Install using composer:
 
-    {
-        "require": {
-            "jenssegers/mongodb-lite": "*"
-        }
-    }
+    composer require jenssegers/mongodb-lite
 
 Add the service provider in `app/config/app.php`:
 
